@@ -16,7 +16,7 @@ const create = async (displayName, email, password, image) => {
 };
 
 const getByUserId = async (id) => {
-  const user = await User.findOne({ where: { id } });
+  const user = await User.findOne({ where: { id }, attributes: { exclude: ['password'] } });
   return user;
 };
 
