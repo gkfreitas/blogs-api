@@ -29,11 +29,16 @@ const createUser = async (req, res) => {
   const { displayName, email, password, image } = req.body;
   const user = await UserService.create(displayName, email, password, image);
   const token = jwt.sign({ data: { userId: user.id } }, secret, jwtConfig);
-  console.log(user);
   return res.status(201).json({ token });
+};
+
+const showUsers = async (_req, res) => {
+  const users = await UserService.getAll();
+  return res.status(200).json(users);
 };
 
 module.exports = {
   userLogin,
   createUser,
+  showUsers,
 };
