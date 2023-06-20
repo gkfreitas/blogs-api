@@ -4,6 +4,8 @@ const express = require('express');
 
 const app = express();
 const userController = require('./controllers/UserController');
+const validateNewUser = require('./middlewares/validateNewUser');
+
 // não remova ou mova esse endpoint
 app.get('/', (_request, response) => {
   response.send();
@@ -11,7 +13,8 @@ app.get('/', (_request, response) => {
 
 app.use(express.json());
 
-app.post('/login', userController);
+app.post('/login', userController.userLogin);
+app.post('/user', validateNewUser, userController.createUser);
 // ...
 
 // É importante exportar a constante `app`,

@@ -3,15 +3,15 @@ const UserService = require('../services/UserService');
 
 const secret = process.env.JWT_SECRET || 'seusecretdetoken';
 
-const isBodyValid = (email, password) => email && password;
-
 const jwtConfig = {
   expiresIn: '7d',
   algorithm: 'HS256',
 };
 
-module.exports = async (req, res) => {
-    const { email, password } = req.body;
+const userLogin = async (req, res) => {
+  const isBodyValid = (email, password) => email && password;
+
+  const { email, password } = req.body;
     if (!isBodyValid(email, password)) {
       return res.status(400).json({ message: 'Some required fields are missing' });
     }
@@ -23,4 +23,17 @@ module.exports = async (req, res) => {
   const token = jwt.sign({ data: { userId: user.id } }, secret, jwtConfig);
 
   return res.status(200).json({ token });
+};
+
+const createUser = async (req, res) => {
+  const { displayName, email, password, image } = req.body;
+  const user = await UserService.create(displayName, email, password, image);
+  const token = jwt.sign({ data: { userId: user.id } }, secret, jwtConfig);
+  console.log(user);
+  return res.status(201).json({ token });
+};
+
+module.exports = {
+  userLogin,
+  createUser,
 };
